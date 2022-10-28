@@ -1,0 +1,15 @@
+C:\Users\21wiwa\source\repos\BokaPlats\BokaPlats\bin\Debug\net6.0\BokaPlats.exe
+C:\Users\21wiwa\source\repos\BokaPlats\BokaPlats\bin\Debug\net6.0\BokaPlats.deps.json
+C:\Users\21wiwa\source\repos\BokaPlats\BokaPlats\bin\Debug\net6.0\BokaPlats.runtimeconfig.json
+C:\Users\21wiwa\source\repos\BokaPlats\BokaPlats\bin\Debug\net6.0\BokaPlats.dll
+C:\Users\21wiwa\source\repos\BokaPlats\BokaPlats\bin\Debug\net6.0\BokaPlats.pdb
+C:\Users\21wiwa\source\repos\BokaPlats\BokaPlats\obj\Debug\net6.0\BokaPlats.csproj.AssemblyReference.cache
+C:\Users\21wiwa\source\repos\BokaPlats\BokaPlats\obj\Debug\net6.0\BokaPlats.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\21wiwa\source\repos\BokaPlats\BokaPlats\obj\Debug\net6.0\BokaPlats.AssemblyInfoInputs.cache
+C:\Users\21wiwa\source\repos\BokaPlats\BokaPlats\obj\Debug\net6.0\BokaPlats.AssemblyInfo.cs
+C:\Users\21wiwa\source\repos\BokaPlats\BokaPlats\obj\Debug\net6.0\BokaPlats.csproj.CoreCompileInputs.cache
+C:\Users\21wiwa\source\repos\BokaPlats\BokaPlats\obj\Debug\net6.0\BokaPlats.dll
+C:\Users\21wiwa\source\repos\BokaPlats\BokaPlats\obj\Debug\net6.0\refint\BokaPlats.dll
+C:\Users\21wiwa\source\repos\BokaPlats\BokaPlats\obj\Debug\net6.0\BokaPlats.pdb
+C:\Users\21wiwa\source\repos\BokaPlats\BokaPlats\obj\Debug\net6.0\BokaPlats.genruntimeconfig.cache
+C:\Users\21wiwa\source\repos\BokaPlats\BokaPlats\obj\Debug\net6.0\ref\BokaPlats.dll
