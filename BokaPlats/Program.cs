@@ -13,6 +13,32 @@ namespace BokaPlats
             Menu();
 
         }
+        static void printTrainCanvas()
+        {
+            
+            Console.WriteLine("---------------------------------------------------");
+            Console.Write("|");
+            //IckeRökare
+            for (int i = 0; i < 16; i++)
+            {
+                int temp = i + 1;
+                if(temp == 5 || temp == 9 || temp == 13)
+                {
+                    Console.Write($"\n| {temp},  ");
+                }
+                if(temp == 9)
+                {
+                    Console.WriteLine("\n---------------------------------------------------");
+                    Console.WriteLine("                      Rökare                       ");
+                    Console.WriteLine("---------------------------------------------------");
+                }
+                else
+                {
+                    Console.Write($" {temp},  "); 
+                }
+            }
+            Console.WriteLine("\n---------------------------------------------------");
+        }
         static void Menu()
         {
             List<int> p = new List<int>();
@@ -79,6 +105,7 @@ namespace BokaPlats
                 if(firstLetter == 's')
                 {
                     Console.Clear();
+                    printTrainCanvas();
                     for (int i = 0; i < biljetter.Count; i++)
                     {
                         biljetter[i].printOut();
