@@ -30,10 +30,6 @@
                 {
                     Console.WriteLine("Bokar");
                 }
-                else
-                {
-                    Console.WriteLine("hfjf");
-                }
             }
             catch(Exception e)
             {
