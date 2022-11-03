@@ -15,29 +15,54 @@ namespace BokaPlats
         }
         static void printTrainCanvas()
         {
-            
-            Console.WriteLine("---------------------------------------------------");
+            Console.WriteLine("\n      -*Platser*-      ");
+            Console.WriteLine("\n           \"X\"      ");
+            Console.WriteLine("     märkerar redan      ");
+            Console.WriteLine("     bokade platser      ");
+            Console.WriteLine("\n______ICKE RÖKARE______");
+            printSection();
+            Console.WriteLine("\n_________RÖKARE________");
+            printSection();
+        }
+        static void printSection()
+        {
             Console.Write("|");
-            //IckeRökare
+            int num = 0;
             for (int i = 0; i < 16; i++)
             {
                 int temp = i + 1;
-                if(temp == 5 || temp == 9 || temp == 13)
+
+                if (num < 4)
                 {
-                    Console.Write($"\n| {temp},  ");
+                    num++;
+                    if (i > 9)
+                    {
+                        Console.Write($"{temp},  ");
+                        if (temp == 16)
+                        {
+                            Console.Write("|");
+                        }
+                    }
+                    else
+                    {
+                        Console.Write($" {temp},  ");
+                    }
+
                 }
-                if(temp == 9)
+                else if (num >= 3)
                 {
-                    Console.WriteLine("\n---------------------------------------------------");
-                    Console.WriteLine("                      Rökare                       ");
-                    Console.WriteLine("---------------------------------------------------");
-                }
-                else
-                {
-                    Console.Write($" {temp},  "); 
+                    num = 1;
+                    if (i > 9)
+                    {
+                        Console.Write($"|\n| {temp},  ");
+                    }
+                    else
+                    {
+                        Console.Write($" |\n| {temp},  ");
+                    }
                 }
             }
-            Console.WriteLine("\n---------------------------------------------------");
+            Console.WriteLine("\n-----------------------");
         }
         static void Menu()
         {
@@ -106,11 +131,15 @@ namespace BokaPlats
                 {
                     Console.Clear();
                     printTrainCanvas();
-                    for (int i = 0; i < biljetter.Count; i++)
+
+                    if(biljetter.Count > 0)
                     {
-                        biljetter[i].printOut();
+                        Console.WriteLine("\n______Bokade Biljetter______\n");
+                        for (int i = 0; i < biljetter.Count; i++)
+                        {
+                            biljetter[i].printOut();
+                        }
                     }
-                       
                     
                     Console.WriteLine("Skriv valfri bokstav för att gå tillbaka till menyn: ");
                     Console.ReadLine();
