@@ -27,29 +27,69 @@ namespace BokaPlats
         }
         static void printTrainCanvas()
         {
+            for (int i = 0; i < biljetter.Count; i++)
+            {
+                Console.WriteLine(biljetter[i].seat);
+            }
             Console.WriteLine("\n      -*Platser*-      ");
             Console.WriteLine("\n           \"X\"      ");
             Console.WriteLine("     märkerar redan      ");
             Console.WriteLine("     bokade platser      ");
             Console.WriteLine("\n______ICKE RÖKARE______");
-            printSection();
+            printSection(false, 0, 16);
             Console.WriteLine("\n_________RÖKARE________");
-            printSection();
+            printSection(true, 16, 32);
         }
-        static void printSection()
+        static void printSection(bool smoker, int n, int u)
         {
             Console.Write("|");
             int num = 0;
-            for (int i = 0; i < 16; i++)
+        
+            for (int i = n; i < u; i++)
             {
                 int temp = i + 1;
+
+
+                string seatNum = temp.ToString();
+                for (int y = 0; y < biljetter.Count; y++)
+                {
+                    if (smoker)
+                    {
+                        if (biljetter[y].seat == temp && biljetter[y].smokerSeat)
+                        {
+                            if (i.ToString().Length == 2)
+                            {
+                                seatNum = "X ";
+                            }
+                            else
+                            {
+                                seatNum = "X";
+                            }
+                  
+                        }
+                    }
+                    else
+                    {
+                        if (biljetter[y].seat == temp && biljetter[y].smokerSeat == false)
+                        {
+                            if (i.ToString().Length == 2)
+                            {
+                                seatNum = "X ";
+                            }
+                            else
+                            {
+                                seatNum = "X";
+                            }
+                        }
+                    }
+                }
 
                 if (num < 4)
                 {
                     num++;
-                    if (i > 9)
+                    if (i.ToString().Length == 2)
                     {
-                        Console.Write($"{temp},  ");
+                        Console.Write($"{seatNum},  ");
                         if (temp == 16)
                         {
                             Console.Write("|");
@@ -57,20 +97,20 @@ namespace BokaPlats
                     }
                     else
                     {
-                        Console.Write($" {temp},  ");
+                        Console.Write($" {seatNum},  ");
                     }
 
                 }
                 else if (num >= 3)
                 {
                     num = 1;
-                    if (i > 9)
+                    if (i.ToString().Length == 2)
                     {
-                        Console.Write($"|\n| {temp},  ");
+                        Console.Write($"|\n| {seatNum},  ");
                     }
                     else
                     {
-                        Console.Write($" |\n| {temp},  ");
+                        Console.Write($" |\n| {seatNum},  ");
                     }
                 }
             }
@@ -88,6 +128,7 @@ namespace BokaPlats
             Console.WriteLine("Vad vill du göra: ");
             Console.WriteLine("\u2022 Boka, skriv \"B\", på samma rad följt av ett platsnummer. (1 - 32) plattser ");
             Console.WriteLine("\u2022 Avboka, skriv \"A\" på samma rad följt av ett platsnummer. (1 - 32) plattser ");
+            Console.WriteLine("\u2022 Ändra biljett, skriv \"C\" på samma rad följt av ett platsnummer. (1 - 32) plattser ");
             Console.WriteLine("\u2022 Skriva ut det senaste bokade biljetterna, skriv \"S\"");
             Console.WriteLine("\u2022 Avsluta, skriv \"Q\"");
 
@@ -138,6 +179,51 @@ namespace BokaPlats
                 {
                     int nummer = int.Parse(otherLetters);
                     avboka(nummer);
+                }
+                if(firstLetter == 'c')
+                {
+                    int nummer = int.Parse(otherLetters);
+                    avboka(nummer);
+
+                    Console.WriteLine("skriv");
+                    Console.ReadLine();
+
+                    int n = int.Parse(otherLetters);
+                    if (n > 32 || n < 1)
+                    {
+                        Console.WriteLine("Denna plats finns inte. Endast platser mellan (1 - 32)");
+                        Console.WriteLine("Går tillbaka till meny...");
+                        System.Threading.Thread.Sleep(5000);
+                        Console.Clear();
+                        Menu();
+                    }
+                    foreach (Biljett biljett in biljetter)
+                    {
+                        p.RemoveAt(biljett.seat);
+                        if (n == biljett.seat)
+                        {
+                            Console.WriteLine("Denna plats är redan bokad");
+                            Console.WriteLine("Platser som inte är bokade: ");
+                            for (int i = 0; i < p.Count; i++)
+                            {
+                                if (i == biljett.seat)
+                                {
+                                    Console.Write("");
+                                }
+                                else
+                                {
+                                    Console.Write($"{i}, ");
+                                }
+                            }
+                            Console.WriteLine();
+                            Console.WriteLine("Går tillbaka till meny...");
+                            System.Threading.Thread.Sleep(5000);
+                            Console.Clear();
+                            Menu();
+                        }
+                    }
+                    boka(n);
+
                 }
                 if(firstLetter == 's')
                 {

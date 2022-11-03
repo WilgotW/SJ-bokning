@@ -13,7 +13,7 @@ namespace BokaPlats
         public string location2 { get; set; }
         string time { get; set; }
         public int seat { get; set; }
-        bool smokerSeat { get; set; }
+        public bool smokerSeat { get; set; }
 
         public Biljett(string location1, string location2, int seat, bool smokerSeat)
         {
