@@ -1,17 +1,29 @@
-﻿using System.Formats.Asn1;
+﻿using System;
+using System.Formats.Asn1;
 
 namespace BokaPlats
 {
     internal class Program
     {
         static List<Biljett> biljetter = new List<Biljett>();
+        static List<string> destinationer = new List<string>();
+        
         static void Main(string[] args)
         {
+            addDestinations("Stockholm", "Göteborg", "Malmö", "Lund", "Uppsala", "Helsingborg", "Kristianstad", "Gävle", "Borås", "Norrköping");
+
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             Console.WriteLine("\nVälkommen till SJ-bokning! \n");
-
+            
             Menu();
 
+        }
+        static void addDestinations(params string[] list)
+        {
+            for (int i = 0; i < list.Length; i++)
+            {
+                destinationer.Add(list[i]);
+            }
         }
         static void printTrainCanvas()
         {
@@ -164,14 +176,54 @@ namespace BokaPlats
             }
         }
 
-
+        static int destinationIndexCheck()
+        {
+            int num = 0;
+            try
+            {
+                num = int.Parse(Console.ReadLine());
+                return num-1;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error: {e.Message}");
+                Console.WriteLine("Går tillbaka till menyn...");
+                System.Threading.Thread.Sleep(2000);
+                Console.Clear();
+                Menu();
+            }
+            if (num > destinationer.Count || num < 0)
+            {
+                Console.WriteLine("ogiltigt nummer");
+                Console.WriteLine("Går tillbaka till menyn...");
+                System.Threading.Thread.Sleep(2000);
+                Console.Clear();
+                Menu();
+            }
+            return 0;
+            
+        }
         static void boka(int platsnummer)
         {
             Console.Clear();
+            Console.WriteLine("___Tillgängliga destinationer___");
+            for (int i = 0; i < destinationer.Count; i++)
+            {
+                Console.WriteLine($"{i+1}• {destinationer[i]}");
+            }
+            Console.WriteLine("--------------------------------");
             Console.WriteLine("Vart åker du ifrån:");
-            string location1 = Console.ReadLine();
+
+            int a;
+
+            a = destinationIndexCheck();
+            string location1 = destinationer[a];
+            Console.WriteLine(destinationer[a]);
+            
             Console.WriteLine("Vart vill du åka:");
-            string location2 = Console.ReadLine();
+            a = destinationIndexCheck();
+            string location2 = destinationer[a];
+            Console.WriteLine(destinationer[a]);
 
             int seat = platsnummer;
             Console.WriteLine("Tänker du att röka på resan (y/n): ");
