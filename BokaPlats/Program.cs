@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Formats.Asn1;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BokaPlats
 {
@@ -18,6 +19,39 @@ namespace BokaPlats
             Menu();
 
         }
+        static void menuText()
+        {
+            Console.WriteLine("\n\n_______Meny_______");
+            Console.WriteLine("Vad vill du göra: ");
+            tools.lines(84);
+
+            tools.colorizeText("\n\u2022 Boka");
+            Console.Write(", skriv ");
+            tools.colorizeText("\"B\"");
+            Console.Write(", på samma rad följt av ett platsnummer.(1 - 16): icke Rökare. (17 - 32): rökare");
+
+            tools.colorizeText("\n• Avboka");
+            Console.Write(", skriv ");
+            tools.colorizeText("\"A\"");
+            Console.Write(" på samma rad följt av ett platsnummer. (1 - 32) plattser ");
+
+            tools.colorizeText("\n• Ändra biljett");
+            Console.Write(" skriv ");
+            tools.colorizeText("\"C\"");
+            Console.Write(" på samma rad följt av ett platsnummer. (1 - 32) plattser ");
+
+            tools.colorizeText("\n• Skriva ut");
+            Console.Write(" det senaste bokade biljetterna, skriv ");
+            tools.colorizeText("\"S\"");
+
+            tools.colorizeText("\n• Avsluta");
+            Console.Write(", skriv ");
+            tools.colorizeText("\"Q\"");
+
+            Console.WriteLine();
+            tools.lines(84);
+            Console.WriteLine();
+        }
         static void addDestinations(params string[] list)
         {
             for (int i = 0; i < list.Length; i++)
@@ -32,7 +66,7 @@ namespace BokaPlats
                 Console.WriteLine(biljetter[i].seat);
             }
             Console.WriteLine("\n      -*Platser*-      ");
-            Console.WriteLine("\n           \"X\"      ");
+            tools.colorizeText("\n           \"X\"      \n");
             Console.WriteLine("     märkerar redan      ");
             Console.WriteLine("     bokade platser      ");
             Console.WriteLine("\n______ICKE RÖKARE______");
@@ -43,6 +77,10 @@ namespace BokaPlats
         static void printSection(bool smoker, int n, int u)
         {
             Console.Write("|");
+            if (smoker)
+            {
+                Console.Write(" ");
+            }
             int num = 0;
         
             for (int i = n; i < u; i++)
@@ -57,6 +95,7 @@ namespace BokaPlats
                     {
                         if (biljetter[y].seat == temp && biljetter[y].smokerSeat)
                         {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
                             if (i.ToString().Length == 2)
                             {
                                 seatNum = "X ";
@@ -65,13 +104,18 @@ namespace BokaPlats
                             {
                                 seatNum = "X";
                             }
-                  
+
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
                         }
                     }
                     else
                     {
                         if (biljetter[y].seat == temp && biljetter[y].smokerSeat == false)
                         {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
                             if (i.ToString().Length == 2)
                             {
                                 seatNum = "X ";
@@ -81,9 +125,14 @@ namespace BokaPlats
                                 seatNum = "X";
                             }
                         }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.White;
+                        }
                     }
+                   
                 }
-
+                
                 if (num < 4)
                 {
                     num++;
@@ -114,9 +163,13 @@ namespace BokaPlats
                     }
                 }
             }
+            if (smoker)
+            {
+                Console.Write("|");
+            }
             Console.WriteLine("\n-----------------------");
         }
-        static void Menu()
+        static void b(string otherLetters)
         {
             List<int> p = new List<int>();
             for (int i = 0; i < 32; i++)
@@ -124,132 +177,128 @@ namespace BokaPlats
                 p.Add(i);
             }
 
-            string answer;
-            Console.WriteLine("Vad vill du göra: ");
-            Console.WriteLine("\u2022 Boka, skriv \"B\", på samma rad följt av ett platsnummer. (1 - 32) plattser ");
-            Console.WriteLine("\u2022 Avboka, skriv \"A\" på samma rad följt av ett platsnummer. (1 - 32) plattser ");
-            Console.WriteLine("\u2022 Ändra biljett, skriv \"C\" på samma rad följt av ett platsnummer. (1 - 32) plattser ");
-            Console.WriteLine("\u2022 Skriva ut det senaste bokade biljetterna, skriv \"S\"");
-            Console.WriteLine("\u2022 Avsluta, skriv \"Q\"");
+            int nummer = int.Parse(otherLetters);
+            if (nummer > 32 || nummer < 1)
+            {
+                Console.WriteLine("Denna plats finns inte. Endast platser mellan (1 - 32)");
+                Console.WriteLine("Går tillbaka till meny...");
+                System.Threading.Thread.Sleep(5000);
+                Console.Clear();
+                Menu();
+            }
+            foreach (Biljett biljett in biljetter)
+            {
+                p.RemoveAt(biljett.seat);
+                if (nummer == biljett.seat)
+                {
+                    Console.WriteLine("Denna plats är redan bokad");
+                    Console.WriteLine("Platser som inte är bokade: ");
+                    for (int i = 0; i < p.Count; i++)
+                    {
+                        if (i == biljett.seat)
+                        {
+                            Console.Write("");
+                        }
+                        else
+                        {
+                            Console.Write($"{i}, ");
+                        }
+                    }
+                    Console.WriteLine();
+                    Console.WriteLine("Går tillbaka till meny...");
+                    System.Threading.Thread.Sleep(5000);
+                    Console.Clear();
+                    Menu();
+                }
+            }
+            boka(nummer);
+        }
+        static void a(string otherLetters)
+        {
+            int nummer = int.Parse(otherLetters);
+            avboka(nummer);
+        }
+        static void c(string otherLetters)
+        {
+            Console.Clear();
+            int nummer = int.Parse(otherLetters);
 
+            foreach (Biljett biljett in biljetter)
+            {
+                if (nummer == biljett.seat)
+                {
+                    Console.WriteLine($"Ändrar Biljett från {biljett.location1} till {biljett.location2} med platts {biljett.seat}");
+                    biljetter.Remove(biljett);
+                    Console.Clear();
+                    System.Threading.Thread.Sleep(2000);
+                    boka(nummer);
+                    return;
+                }
+            }
+
+            Console.WriteLine($"Ingen Biljett med platsnummer {nummer}");
+            Console.WriteLine("Går tillbaka till meny...");
+            System.Threading.Thread.Sleep(4000);
+            Console.Clear();
+            Menu();
+        }
+        static void s(string otherLetters)
+        {
+            Console.Clear();
+            printTrainCanvas();
+
+            if (biljetter.Count > 0)
+            {
+                Console.WriteLine("\n______Bokade Biljetter______\n");
+                for (int i = 0; i < biljetter.Count; i++)
+                {
+                    biljetter[i].printOut();
+                }
+            }
+
+            Console.WriteLine("Skriv valfri bokstav för att gå tillbaka till menyn: ");
+            Console.ReadLine();
+            Console.Clear();
+            Menu();
+        }
+        static void q(string otherLetters)
+        {
+            Console.Clear();
+            Console.WriteLine("Programm Avslutas");
+            System.Threading.Thread.Sleep(2000);
+            System.Environment.Exit(1);
+        }
+        
+        static void Menu()
+        {
+            string answer;
+
+            menuText();
+            
             try
             {
                 answer = Console.ReadLine().ToLower();               
                 char firstLetter = answer[0];
                 string otherLetters = answer.Substring(1);
-                if(firstLetter == 'b')
+                switch (firstLetter)
                 {
-                    int nummer = int.Parse(otherLetters);
-                    if(nummer > 32 || nummer < 1)
-                    {
-                        Console.WriteLine("Denna plats finns inte. Endast platser mellan (1 - 32)");
-                        Console.WriteLine("Går tillbaka till meny...");
-                        System.Threading.Thread.Sleep(5000);
-                        Console.Clear();
-                        Menu();
-                    }
-                    foreach(Biljett biljett in biljetter)
-                    {
-                        p.RemoveAt(biljett.seat);
-                        if(nummer == biljett.seat)
-                        {
-                            Console.WriteLine("Denna plats är redan bokad" );
-                            Console.WriteLine("Platser som inte är bokade: ");
-                            for (int i = 0; i < p.Count; i++)
-                            {
-                                if(i == biljett.seat)
-                                {
-                                    Console.Write("");
-                                }
-                                else
-                                {
-                                    Console.Write($"{i}, ");
-                                }
-                            }
-                            Console.WriteLine();
-                            Console.WriteLine("Går tillbaka till meny...");
-                            System.Threading.Thread.Sleep(5000);
-                            Console.Clear();
-                            Menu();
-                        }
-                    }
-                    boka(nummer);
-                }
-                if(firstLetter == 'a')
-                {
-                    int nummer = int.Parse(otherLetters);
-                    avboka(nummer);
-                }
-                if(firstLetter == 'c')
-                {
-                    int nummer = int.Parse(otherLetters);
-                    avboka(nummer);
-
-                    Console.WriteLine("skriv");
-                    Console.ReadLine();
-
-                    int n = int.Parse(otherLetters);
-                    if (n > 32 || n < 1)
-                    {
-                        Console.WriteLine("Denna plats finns inte. Endast platser mellan (1 - 32)");
-                        Console.WriteLine("Går tillbaka till meny...");
-                        System.Threading.Thread.Sleep(5000);
-                        Console.Clear();
-                        Menu();
-                    }
-                    foreach (Biljett biljett in biljetter)
-                    {
-                        p.RemoveAt(biljett.seat);
-                        if (n == biljett.seat)
-                        {
-                            Console.WriteLine("Denna plats är redan bokad");
-                            Console.WriteLine("Platser som inte är bokade: ");
-                            for (int i = 0; i < p.Count; i++)
-                            {
-                                if (i == biljett.seat)
-                                {
-                                    Console.Write("");
-                                }
-                                else
-                                {
-                                    Console.Write($"{i}, ");
-                                }
-                            }
-                            Console.WriteLine();
-                            Console.WriteLine("Går tillbaka till meny...");
-                            System.Threading.Thread.Sleep(5000);
-                            Console.Clear();
-                            Menu();
-                        }
-                    }
-                    boka(n);
-
-                }
-                if(firstLetter == 's')
-                {
-                    Console.Clear();
-                    printTrainCanvas();
-
-                    if(biljetter.Count > 0)
-                    {
-                        Console.WriteLine("\n______Bokade Biljetter______\n");
-                        for (int i = 0; i < biljetter.Count; i++)
-                        {
-                            biljetter[i].printOut();
-                        }
-                    }
-                    
-                    Console.WriteLine("Skriv valfri bokstav för att gå tillbaka till menyn: ");
-                    Console.ReadLine();
-                    Console.Clear();
-                    Menu();
-                }
-                if(firstLetter == 'q')
-                {
-                    Console.Clear();
-                    Console.WriteLine("Programm Avslutas");
-                    System.Threading.Thread.Sleep(2000);
-                    System.Environment.Exit(1);
+                    case 'b':
+                        b(otherLetters);
+                        break;
+                    case 'a':
+                        a(otherLetters);
+                        break;
+                    case 'c':
+                        c(otherLetters);
+                        break;
+                    case 's':
+                        s(otherLetters);
+                        break;
+                    case 'q':
+                        q(otherLetters);
+                        break;
+                    default:
+                        break;
                 }
             }
             catch(Exception e)
@@ -291,7 +340,10 @@ namespace BokaPlats
         }
         static void boka(int platsnummer)
         {
+            
+
             Console.Clear();
+            
             Console.WriteLine("___Tillgängliga destinationer___");
             for (int i = 0; i < destinationer.Count; i++)
             {
@@ -300,9 +352,8 @@ namespace BokaPlats
             Console.WriteLine("--------------------------------");
             Console.WriteLine("Vart åker du ifrån:");
 
-            int a;
+            int a = destinationIndexCheck();
 
-            a = destinationIndexCheck();
             string location1 = destinationer[a];
             Console.WriteLine(destinationer[a]);
             
@@ -312,26 +363,19 @@ namespace BokaPlats
             Console.WriteLine(destinationer[a]);
 
             int seat = platsnummer;
-            Console.WriteLine("Tänker du att röka på resan (y/n): ");
-
-            bool smokerSeat;
-            string answer = Console.ReadLine().ToLower();
-            if (answer == "y")
+            bool smokerSeat = false;
+            string answer = "";
+            if (platsnummer > 16)
             {
                 smokerSeat = true;
                 answer = "RÖKARE";
             }
-            else if (answer == "n")
+            else if(platsnummer <= 16)
             {
                 smokerSeat = false;
                 answer = "ICKE RÖKARE";
             }
-            else
-            {
-                Console.WriteLine($"{answer} is an invalid input, setting smoker as false");
-                smokerSeat = false;
-            }
-            
+
             biljetter.Add(new Biljett(location1, location2, seat, smokerSeat));
 
             Console.WriteLine($"Bokar plats {seat} som {answer}");

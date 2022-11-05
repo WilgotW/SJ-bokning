@@ -24,10 +24,7 @@ namespace BokaPlats
         }
         public void printOut()
         {
-            
-
-            string smoker;
-            
+            string smoker;   
             if (smokerSeat)
             {
                 smoker = "RÖKARE";
@@ -36,7 +33,6 @@ namespace BokaPlats
             {
                 smoker = "ICKE RÖKARE";
             }
-
             string biljett = $"\n PLATSBILJETT \n {location1}-{location2} \n Plats: {seat} \n som: {smoker}";
             lines();
             Console.WriteLine(biljett);
