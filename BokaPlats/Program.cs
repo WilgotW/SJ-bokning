@@ -181,10 +181,7 @@ namespace BokaPlats
             if (nummer > 32 || nummer < 1)
             {
                 Console.WriteLine("Denna plats finns inte. Endast platser mellan (1 - 32)");
-                Console.WriteLine("Går tillbaka till meny...");
-                System.Threading.Thread.Sleep(5000);
-                Console.Clear();
-                Menu();
+                TillbakaTillMenu();
             }
             foreach (Biljett biljett in biljetter)
             {
@@ -205,10 +202,7 @@ namespace BokaPlats
                         }
                     }
                     Console.WriteLine();
-                    Console.WriteLine("Går tillbaka till meny...");
-                    System.Threading.Thread.Sleep(5000);
-                    Console.Clear();
-                    Menu();
+                    TillbakaTillMenu();
                 }
             }
             boka(nummer);
@@ -216,7 +210,17 @@ namespace BokaPlats
         static void a(string otherLetters)
         {
             int nummer = int.Parse(otherLetters);
-            avboka(nummer);
+            foreach(Biljett biljett in biljetter)
+            {
+                if(biljett.seat == nummer)
+                {
+                    avboka(nummer);
+                    return;
+                }
+            }
+            Console.WriteLine($"platts {nummer} är ej bokad");
+            TillbakaTillMenu();
+            
         }
         static void c(string otherLetters)
         {
@@ -237,10 +241,7 @@ namespace BokaPlats
             }
 
             Console.WriteLine($"Ingen Biljett med platsnummer {nummer}");
-            Console.WriteLine("Går tillbaka till meny...");
-            System.Threading.Thread.Sleep(4000);
-            Console.Clear();
-            Menu();
+            TillbakaTillMenu();
         }
         static void s(string otherLetters)
         {
@@ -268,7 +269,13 @@ namespace BokaPlats
             System.Threading.Thread.Sleep(2000);
             System.Environment.Exit(1);
         }
-        
+        static void TillbakaTillMenu()
+        {
+            Console.WriteLine("Går tillbaka till meny...");
+            System.Threading.Thread.Sleep(4000);
+            Console.Clear();
+            Menu();
+        }
         static void Menu()
         {
             string answer;
@@ -298,6 +305,8 @@ namespace BokaPlats
                         q(otherLetters);
                         break;
                     default:
+                        Console.WriteLine($"Det finns ingen kommando för \"{otherLetters}\"");
+                        TillbakaTillMenu();
                         break;
                 }
             }
