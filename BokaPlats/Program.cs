@@ -2,24 +2,29 @@
 using System.Formats.Asn1;
 using static System.Net.Mime.MediaTypeNames;
 
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
 namespace BokaPlats
 {
-    internal class Program
+    public class Program
     {
         static List<Biljett> biljetter = new List<Biljett>();
         static List<string> destinationer = new List<string>();
         
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            addDestinations("Stockholm", "Göteborg", "Malmö", "Lund", "Uppsala", "Helsingborg", "Kristianstad", "Gävle", "Borås", "Norrköping");
+            Program p = new Program();
+
+            p.addDestinations("Stockholm", "Göteborg", "Malmö", "Lund", "Uppsala", "Helsingborg", "Kristianstad", "Gävle", "Borås", "Norrköping");
 
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             Console.WriteLine("\nVälkommen till SJ-bokning! \n");
             
-            Menu();
+            p.Menu();
 
         }
-        static void menuText()
+        void menuText()
         {
             Console.WriteLine("\n\n_______Meny_______");
             Console.WriteLine("Vad vill du göra: ");
@@ -52,14 +57,14 @@ namespace BokaPlats
             tools.lines(84);
             Console.WriteLine();
         }
-        static void addDestinations(params string[] list)
+        public void addDestinations(params string[] list)
         {
             for (int i = 0; i < list.Length; i++)
             {
                 destinationer.Add(list[i]);
             }
         }
-        static void printTrainCanvas()
+        void printTrainCanvas()
         {
             for (int i = 0; i < biljetter.Count; i++)
             {
@@ -74,7 +79,7 @@ namespace BokaPlats
             Console.WriteLine("\n_________RÖKARE________");
             printSection(true, 16, 32);
         }
-        static void printSection(bool smoker, int n, int u)
+        void printSection(bool smoker, int n, int u)
         {
             Console.Write("|");
             if (smoker)
@@ -169,7 +174,7 @@ namespace BokaPlats
             }
             Console.WriteLine("\n-----------------------");
         }
-        static void b(string otherLetters)
+        void b(string otherLetters)
         {
             List<int> p = new List<int>();
             for (int i = 0; i < 32; i++)
@@ -207,7 +212,7 @@ namespace BokaPlats
             }
             boka(nummer);
         }
-        static void a(string otherLetters)
+        void a(string otherLetters)
         {
             int nummer = int.Parse(otherLetters);
             foreach(Biljett biljett in biljetter)
@@ -222,7 +227,7 @@ namespace BokaPlats
             TillbakaTillMenu();
             
         }
-        static void c(string otherLetters)
+        void c(string otherLetters)
         {
             Console.Clear();
             int nummer = int.Parse(otherLetters);
@@ -243,7 +248,7 @@ namespace BokaPlats
             Console.WriteLine($"Ingen Biljett med platsnummer {nummer}");
             TillbakaTillMenu();
         }
-        static void s(string otherLetters)
+        void s(string otherLetters)
         {
             Console.Clear();
             printTrainCanvas();
@@ -262,21 +267,21 @@ namespace BokaPlats
             Console.Clear();
             Menu();
         }
-        static void q(string otherLetters)
+        void q(string otherLetters)
         {
             Console.Clear();
             Console.WriteLine("Programm Avslutas");
             System.Threading.Thread.Sleep(2000);
             System.Environment.Exit(1);
         }
-        static void TillbakaTillMenu()
+        void TillbakaTillMenu()
         {
             Console.WriteLine("Går tillbaka till meny...");
             System.Threading.Thread.Sleep(4000);
             Console.Clear();
             Menu();
         }
-        static void Menu()
+        public void Menu()
         {
             string answer;
 
@@ -320,7 +325,7 @@ namespace BokaPlats
             }
         }
 
-        static int destinationIndexCheck()
+        int destinationIndexCheck()
         {
             int num = 0;
             try
@@ -331,23 +336,17 @@ namespace BokaPlats
             catch (Exception e)
             {
                 Console.WriteLine($"Error: {e.Message}");
-                Console.WriteLine("Går tillbaka till menyn...");
-                System.Threading.Thread.Sleep(2000);
-                Console.Clear();
-                Menu();
+                TillbakaTillMenu();
             }
             if (num > destinationer.Count || num < 0)
             {
                 Console.WriteLine("ogiltigt nummer");
-                Console.WriteLine("Går tillbaka till menyn...");
-                System.Threading.Thread.Sleep(2000);
-                Console.Clear();
-                Menu();
+                TillbakaTillMenu();
             }
             return 0;
             
         }
-        static void boka(int platsnummer)
+        void boka(int platsnummer)
         {
             
 
@@ -371,6 +370,8 @@ namespace BokaPlats
             string location2 = destinationer[a];
             Console.WriteLine(destinationer[a]);
 
+            
+
             int seat = platsnummer;
             bool smokerSeat = false;
             string answer = "";
@@ -385,16 +386,31 @@ namespace BokaPlats
                 answer = "ICKE RÖKARE";
             }
 
-            biljetter.Add(new Biljett(location1, location2, seat, smokerSeat));
+            Biljett nyBiljett = new Biljett(location1, location2, seat, smokerSeat);
+            biljetter.Add(nyBiljett);
+
+            
+            
+            spara();
+            
 
             Console.WriteLine($"Bokar plats {seat} som {answer}");
-            Console.WriteLine("Går tillbaka till meny...");
-            System.Threading.Thread.Sleep(2000);
-            Console.Clear();
-            Menu();
+            TillbakaTillMenu();
+        }
+        void spara()
+        {
+            JsonSerializer serializer = new JsonSerializer();
+            serializer.Converters.Add(new JavaScriptDateTimeConverter());
+            serializer.NullValueHandling = NullValueHandling.Ignore;
+
+            using (StreamWriter sw = new StreamWriter(@"biljetter.json"))
+            using (JsonWriter writer = new JsonTextWriter(sw))
+            {
+                serializer.Serialize(writer, biljetter);
+            }
         }
 
-        static void avboka(int platsnummer)
+        void avboka(int platsnummer)
         {
             foreach(Biljett biljett in biljetter)
             {
